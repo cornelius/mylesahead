@@ -1,0 +1,46 @@
+.chart {
+  width: 1000px;
+  height: 500px;
+
+  position: absolute;
+
+  top: 50%;
+  margin-top: -250px;
+
+  left: 50%;
+  margin-left: -500px;
+}
+
+.bar {
+  fill: darkgreen;
+}
+
+.bar:hover {
+  fill: green;
+}
+
+.axis {
+  font: 12px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.button {
+  border: 1px solid grey;
+  padding: 4px;
+  margin: 2px;
+  display: inline;
+}
+
+.button:hover {
+  background: #eee;
+}
+
+.buttons {
+  margin: 20px;
+}
