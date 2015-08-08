@@ -1,5 +1,9 @@
 {
-  "name"    : "mylesahead",
-  "version" : "0.1.0",
-  "main"    : "main.js"
+  "name": "mylesahead",
+  "version": "0.1.0",
+  "main": "main.js",
+  "dependencies": {
+    "electron-debug": "^0.1.1",
+    "expand-home-dir": "^0.0.2"
+  }
 }

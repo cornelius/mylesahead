@@ -19,9 +19,11 @@ require('ipc').on('show', function(rawData) {
     .orient("left")
     .ticks(10);
 
+  d3.select(".the-chart").remove();
   var svg = d3.select(".chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("class", "the-chart")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 

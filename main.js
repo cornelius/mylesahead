@@ -1,8 +1,12 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
+var ipc = require('ipc');
+var expandHomeDir = require('expand-home-dir');
 
 // Report crashes to our server.
 require('crash-reporter').start();
+
+require('electron-debug')();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
@@ -31,8 +35,48 @@ app.on('ready', function() {
     mainWindow = null;
   });
 
+  readBuckets();
+
+  var file = "mydata.json";
+  mainWindow.webContents.on('did-finish-load', function() {
+    graphBucket(file);
+  });
+});
+
+ipc.on('bucket-clicked', function(event, bucket_id) {
+  path = expandHomeDir("~/.local/share/myer/buckets/" + bucket_id + ".json");
+  graphBucket(path);
+});
+
+function readBuckets() {
+  path = expandHomeDir("~/.local/share/myer/buckets/");
+
   var fs = require('fs');
-  file = "mydata.json";
+  fs.readdir(path, function(err, files) {
+    var buckets = [];
+
+    files.forEach(function(file) {
+      if(/\.json$/.test(file)) {
+        buckets.push(readBucket(path + file));
+      }
+    });
+
+    mainWindow.webContents.on('did-finish-load', function() {
+      mainWindow.webContents.send('showBucketList', buckets);
+    });
+  });
+}
+
+function readBucket(file) {
+  console.log("READ BUCKET FILE " + file);
+  var fs = require('fs');
+  var json = {};
+  json = JSON.parse(fs.readFileSync(file, 'utf8'));
+  return json;
+}
+
+function graphBucket(file) {
+  var fs = require('fs');
   fs.readFile(file, 'utf8', function (err, data) {
     if (err) {
       console.log('Error: ' + err);
@@ -40,10 +84,7 @@ app.on('ready', function() {
     }
 
     json = JSON.parse(data);
-    console.log(json);
 
-    mainWindow.webContents.on('did-finish-load', function() {
-      mainWindow.webContents.send('show', json);
-    });
+    mainWindow.webContents.send('show', json);
   });
-});
+}
